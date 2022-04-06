@@ -2,6 +2,9 @@
 
 # PM2 Environment Setup
 
+
+DOT_FILES_DIR="/home/forge/scripts"
+
 clear
 echo "==============================================="
 echo "PM2 Config Setup - Please Input Project Details"
@@ -15,16 +18,16 @@ echo "Project root directory (e.g. '/home/forge/myuser/mysite.com'): "
 read -e PROJECT_DIR
 
 # Load pm2 port variable
-. .pm2_port
+. $DOT_FILES_DIR/.pm2_port
 
 # Get the new port number
 NEWPORT=$((PM2PORT+1))
 
 # Replace the current PM2 port value
-perl -pi -e "s/$PM2PORT/$NEWPORT/g" .pm2_port
+perl -pi -e "s/$PM2PORT/$NEWPORT/g" $DOT_FILES_DIR/.pm2_port
 
 # Add a site to the list
-echo "# - $PROJECT_NAME = $NEWPORT" >> .pm2_sites
+echo "# - $PROJECT_NAME = $NEWPORT" >> $DOT_FILES_DIR/.pm2_sites
 
 if [ -f "$PROJECT_DIR/ecosystem.config.js" ] | [ -f "$PROJECT_DIR/ecosystem.config.cjs" ]
 then
