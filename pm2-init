@@ -2,8 +2,7 @@
 
 # PM2 Environment Setup
 
-
-DOT_FILES_DIR="/home/forge/scripts"
+DOT_FILES_DIR="$HOME/scripts"
 
 clear
 echo "==============================================="
