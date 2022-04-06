@@ -6,11 +6,14 @@ Make sure the scripts are executable:
 chmod +x $HOME/scripts/*
 ```
 
-Add the scripts dir to $PATH.
+Add the scripts dir to $PATH by adding the below to ~/.profile or ~/.bashrc.
 ```sh
-echo $PATH # Check first
 export PATH=$HOME/scripts/:$PATH
-echo $PATH # Check after
+```
+
+Then restart the SSH session or run
+```sh
+source ~/.bashrc
 ```
 
 Now you can run any of the scripts globally as the user we've installed them for.
