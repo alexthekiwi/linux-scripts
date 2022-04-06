@@ -1,0 +1,4 @@
+#!/bin/bash -e
+
+# Current port number
+PM2PORT=3631

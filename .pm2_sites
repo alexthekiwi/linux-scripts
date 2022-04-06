@@ -1,0 +1,5 @@
+#!/bin/bash -e
+
+# Current sites
+# - majestic-floats = 3630
+# - rat-test = 3631

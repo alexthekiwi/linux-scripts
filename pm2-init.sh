@@ -1,0 +1,66 @@
+#!/bin/bash
+
+# PM2 Environment Setup
+
+clear
+echo "==============================================="
+echo "PM2 Config Setup - Please Input Project Details"
+echo "==============================================="
+
+# Capture input from user
+echo "Project name: "
+read -e PROJECT_NAME
+
+echo "Project root directory (e.g. '/home/forge/myuser/mysite.com'): "
+read -e PROJECT_DIR
+
+# Load pm2 port variable
+. .pm2_port
+
+# Get the new port number
+NEWPORT=$((PM2PORT+1))
+
+# Replace the current PM2 port value
+perl -pi -e "s/$PM2PORT/$NEWPORT/g" .pm2_port
+
+# Add a site to the list
+echo "# - $PROJECT_NAME = $NEWPORT" >> .pm2_sites
+
+if [ -f "$PROJECT_DIR/ecosystem.config.js" ] | [ -f "$PROJECT_DIR/ecosystem.config.cjs" ]
+then
+    echo "The PM2 config file already exists, skipping the creation of the config file"
+else
+    echo "Start command (e.g. 'npm run start' or 'node ./build/index.js'): "
+    read -e START_COMMAND
+
+    echo "File extension ('js' or 'cjs'): "
+    read -e FILE_EXTENSION
+
+    # Create the ecosystem.config file
+    echo "module.exports = {
+        apps: [
+            {
+                name: '$PROJECT_NAME',
+                script: 'PORT=$NEWPORT $START_COMMAND',
+                watch: true,
+                time: true,
+            },
+        ],
+    };" > $PROJECT_DIR/ecosystem.config.$FILE_EXTENSION
+
+    echo "Start app now? (y/n)"
+    read -e WILL_START_NOW
+
+    if [ "$WILL_START_NOW" == "y" ] | [ "$WILL_START_NOW" == "Y" ] | [ "$WILL_START_NOW" == "yes" ]
+    then
+        pm2 start ecosystem.config.$FILE_EXTENSION
+    fi
+fi
+
+
+echo "========================================================"
+echo "Setup complete for $PROJECT_NAME"
+echo "========================================================"
+echo "Update the following in your nginx config file:"
+echo "proxy_pass http://127.0.0.1:$NEWPORT;"
+echo "========================================================"
